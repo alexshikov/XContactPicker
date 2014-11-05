@@ -70,7 +70,7 @@ namespace XContactPicker
 		// has given it up so we can respond to keyboard events
 		public override bool CanBecomeFirstResponder 
 		{
-			get { return true; }
+			get { return DateTime.UtcNow > preventResponseTime; }
 		}
 
 		private float MaxContentWidth
@@ -118,6 +118,17 @@ namespace XContactPicker
 			RegisterClassForCell (typeof(PromptCell), new NSString (typeof(PromptCell).Name));
 
 			Source = new CollectionDataSource (this);
+		}
+
+		// NOTE there is a case when the keyboard is hidden by some another event
+		// in that case iOS asks ContactsCollectionView to become a responder instead
+		// and so that the keyboard appears again
+		// this method allows to set a delay to prevent become a responder for some short time 
+		// (approximatelly the time of keyboard hide animation plus few hundreds of additional millis)
+		private DateTime preventResponseTime;
+		public void PreventBecomeResponder (TimeSpan timeSpan)
+		{
+			preventResponseTime = DateTime.UtcNow + timeSpan;
 		}
 
 		public override bool ResignFirstResponder ()
