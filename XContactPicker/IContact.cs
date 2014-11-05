@@ -5,7 +5,7 @@ namespace XContactPicker
 {
 	public interface IContact
 	{
-		string Title { get; set; }
+		string Title { get; }
 	}
 }
 

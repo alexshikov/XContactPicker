@@ -24,7 +24,8 @@ namespace XContactPicker.Sample
 				new Contact ("Cercei", "cercei@lannister.com"),
 			};
 
-			header = new ContactsCollectionView (new RectangleF (0, 20, 320, 100));
+			header = new ContactsCollectionView (new RectangleF (0, 20, 320, 30), 30);
+			header.BackgroundColor = UIColor.FromRGB (245, 245, 245);
 			header.ContentSizeChanged += UpdateSize;
 			header.ContactRemoved += (c) => {
 				var index = contacts.IndexOf ((Contact)c);
@@ -51,16 +52,16 @@ namespace XContactPicker.Sample
 			View.AddSubviews (tableView, header);
 
 			header.ReloadData ();
-			//UpdateSize (header.Frame.Size);
+			UpdateSize (header.Frame.Size);
 		}
 
 		private void UpdateSize (SizeF size)
 		{
 			var frame = header.Frame;
-			frame.Height = size.Height;
+			frame.Height = Math.Min (64, size.Height);
 			header.Frame = frame;
 
-			var inset = new UIEdgeInsets (frame.Height, 0, 0, 0);
+			var inset = new UIEdgeInsets (frame.Bottom, 0, 0, 0);
 			tableView.ContentInset = inset;
 			tableView.ScrollIndicatorInsets = inset;
 		}

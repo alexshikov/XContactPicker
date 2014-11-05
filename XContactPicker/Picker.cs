@@ -16,7 +16,7 @@ namespace XContactPicker
 
 		private void Setup ()
 		{
-			entryView = new ContactsCollectionView (Bounds);
+			entryView = new ContactsCollectionView (Bounds, 30);
 
 #if DEBUG_BORDERS
 			Layer.BorderColor = UIColor.Gray.CGColor;

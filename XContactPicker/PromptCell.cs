@@ -57,13 +57,18 @@ namespace XContactPicker
 			Layer.BorderWidth = 1f;
 			Layer.BorderColor = UIColor.Purple.CGColor;
 #endif
+			var labelStyle = UILabel.AppearanceWhenContainedIn (GetType ());
+
 			label = new UILabel () 
 			{
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				TextAlignment = UITextAlignment.Center,
-				TextColor = UIColor.Black,
-
+				TextColor = labelStyle.TextColor,
 			};
+
+			if (labelStyle.Font != null) {
+				label.Font = labelStyle.Font;
+			}
 
 			AddSubview (label);
 

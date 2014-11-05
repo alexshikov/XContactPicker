@@ -70,11 +70,17 @@ namespace XContactPicker
 
 		private void Setup ()
 		{
+			var labelStyle = UILabel.AppearanceWhenContainedIn (GetType ());
+
 			textField = new UITextField (Bounds)
 			{
 				Text = " ",
 				AutocorrectionType = UITextAutocorrectionType.No,
+				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
+			if (labelStyle.Font != null) {
+				textField.Font = labelStyle.Font;
+			}
 
 			textField.ShouldReturn = delegate { return false; };
 			textField.ShouldChangeCharacters = ShouldChangeCharacters;

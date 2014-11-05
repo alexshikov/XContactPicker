@@ -12,7 +12,7 @@ namespace XContactPicker
 	[Adopts ("UIKeyInput")]
 	public class ContactsCollectionView: UICollectionView
 	{
-		private float CellHeight = 31;
+		public readonly float CellHeight;
 
 		public event Action<IContact> ContactAdded = delegate {};
 		public event Action<IContact> ContactRemoved = delegate {};
@@ -84,9 +84,10 @@ namespace XContactPicker
 
 		public readonly IList<IContact> SelectedContacts = new List<IContact> ();
 
-		public ContactsCollectionView (RectangleF frame)
+		public ContactsCollectionView (RectangleF frame, float cellHeight)
 			: base (frame, new CollectionFlowLayout ())
 		{
+			CellHeight = cellHeight;
 			Setup ();
 		}
 
@@ -143,8 +144,10 @@ namespace XContactPicker
 		{
 			if (IndexPathsForVisibleItems.Contains (EntryCellIndexPath))
 			{
-				var entryCell = (EntryCell)CellForItem (EntryCellIndexPath);
-				entryCell.Reset ();
+				var entryCell = CellForItem (EntryCellIndexPath) as EntryCell;
+				if (entryCell != null) {
+					entryCell.Reset ();
+				}
 			}
 			else
 			{
@@ -176,7 +179,7 @@ namespace XContactPicker
 		public void RemoveFromSelectedContacts (int index, Action onComplete = null)
 		{
 			var selectedItems = GetIndexPathsForSelectedItems ();
-			if (SelectedContacts.Count + 1 > selectedItems.Length)
+			if (SelectedContacts.Count + 1 > selectedItems.Length && index >= 0 && index < SelectedContacts.Count)
 			{
 				var contact = SelectedContacts [index];
 				PerformBatchUpdates (() => {
@@ -249,8 +252,12 @@ namespace XContactPicker
 		private void SetFocusOnEntry ()
 		{
 			var action = new Action (() => {
-				var cell = (EntryCell) CellForItem (EntryCellIndexPath);
-				cell.SetFocus ();
+
+				var cell = CellForItem (EntryCellIndexPath) as EntryCell;
+				if (cell != null) {
+					cell.SetFocus ();
+				}
+
 			});
 
 			if (IsEntryVisible) 
@@ -265,8 +272,10 @@ namespace XContactPicker
 
 		private void RemoveFocusFromEntry ()
 		{
-			var cell = (EntryCell)CellForItem(EntryCellIndexPath);
-			cell.RemoveFocus ();
+			var cell = CellForItem(EntryCellIndexPath) as EntryCell;
+			if (cell != null) {
+				cell.RemoveFocus ();
+			}
 		}
 
 		private bool IsEntryVisible
@@ -310,8 +319,12 @@ namespace XContactPicker
 
 		#endregion
 
+		private SizeF latestSize;
 		internal void RaiseContentSizeChanged (SizeF size)
 		{
+			if (latestSize == size) {
+				return;
+			}
 			ContentSizeChanged (size);
 		}
 
@@ -336,6 +349,12 @@ namespace XContactPicker
 		[Export ("insertText:")]
 		void InsertText (string text)
 		{
+		}
+
+		[Export ("autocorrectionType")]
+		UITextAutocorrectionType AutocorrectionType
+		{
+			get { return UITextAutocorrectionType.No; }
 		}
 
 		#endregion
