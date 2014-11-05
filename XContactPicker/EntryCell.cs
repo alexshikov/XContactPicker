@@ -106,7 +106,7 @@ namespace XContactPicker
 
 		private void GlobalTextChanged (object sender, NSNotificationEventArgs args)
 		{
-			if (sender == textField) 
+			if (args.Notification.Object == textField) 
 			{
 				TextChanged (Text);
 			}
