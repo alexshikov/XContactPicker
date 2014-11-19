@@ -438,8 +438,11 @@ namespace XContactPicker
 			{
 				var cell = (ContactCell)collectionView.CellForItem (indexPath);
 				cv.BecomeFirstResponder ();
-				cell.IsFocused = true;
-				cv.ContactSelected (cell.Contact);
+				if (cell != null) 
+				{
+					cell.IsFocused = true;
+					cv.ContactSelected (cell.Contact);
+				}
 			}
 
 			public override bool ShouldHighlightItem (UICollectionView collectionView, NSIndexPath indexPath)
