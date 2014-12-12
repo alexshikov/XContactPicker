@@ -44,7 +44,7 @@ namespace XContactPicker
 			}
 
 			var previousIndexPath = NSIndexPath.FromItemSection (indexPath.Item - 1, indexPath.Section);
-			var previousFrame = base.LayoutAttributesForItem(previousIndexPath).Frame;
+			var previousFrame = LayoutAttributesForItem(previousIndexPath).Frame;
 
 			var currentFrame = currentItemAttributes.Frame;
 			var stretchedCurrentFrame = new RectangleF (0, currentFrame.Y, CollectionView.Frame.Width, currentFrame.Height);
