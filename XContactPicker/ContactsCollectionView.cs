@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
-using MonoTouch.UIKit;
-using System.Drawing;
-using MonoTouch.Foundation;
+using UIKit;
+using CoreGraphics;
+using Foundation;
 using System.Collections;
 using System.Collections.Generic;
-using MonoTouch.ObjCRuntime;
+using ObjCRuntime;
 
 namespace XContactPicker
 {
@@ -18,7 +18,7 @@ namespace XContactPicker
 		public event Action<IContact> ContactRemoved = delegate {};
 		public event Action<IContact> ContactSelected = delegate {};
 		public event Action<string> EntryTextChanged = delegate {};
-		public event Action<SizeF> ContentSizeChanged = delegate {};
+		public event Action<CGSize> ContentSizeChanged = delegate {};
 
 		public string SearchText { get; set; }
 		public string PromptText { get; set; }
@@ -26,7 +26,7 @@ namespace XContactPicker
 		public bool AllowsTextInput { get; set; }
 		public bool ShowPrompt { get; set; }
 
-		public override RectangleF Frame 
+		public override CGRect Frame 
 		{
 			set 
 			{
@@ -46,7 +46,7 @@ namespace XContactPicker
 			}
 		}
 
-		public override RectangleF Bounds 
+		public override CGRect Bounds 
 		{
 			set 
 			{
@@ -73,7 +73,7 @@ namespace XContactPicker
 			get { return DateTime.UtcNow > preventResponseTime; }
 		}
 
-		private float MaxContentWidth
+		private nfloat MaxContentWidth
 		{
 			get 
 			{ 
@@ -84,7 +84,7 @@ namespace XContactPicker
 
 		public readonly IList<IContact> SelectedContacts = new List<IContact> ();
 
-		public ContactsCollectionView (RectangleF frame, float cellHeight)
+		public ContactsCollectionView (CGRect frame, float cellHeight)
 			: base (frame, new CollectionFlowLayout ())
 		{
 			CellHeight = cellHeight;
@@ -299,8 +299,8 @@ namespace XContactPicker
 			if (animated)
 			{
 				UIView.Animate (0.25, () => {
-					ContentOffset = new PointF (0, ContentSize.Height - Bounds.Height);
-				}, new NSAction(onComplete));
+					ContentOffset = new CGPoint (0, ContentSize.Height - Bounds.Height);
+				}, onComplete);
 			}
 			else if (ShowPrompt)
 			{
@@ -330,8 +330,8 @@ namespace XContactPicker
 
 		#endregion
 
-		private SizeF latestSize;
-		internal void RaiseContentSizeChanged (SizeF size)
+		private CGSize latestSize;
+		internal void RaiseContentSizeChanged (CGSize size)
 		{
 			if (latestSize == size) {
 				return;
@@ -381,12 +381,12 @@ namespace XContactPicker
 				this.cv = cv;
 			}
 
-			public override int NumberOfSections (UICollectionView collectionView)
+			public override nint NumberOfSections (UICollectionView collectionView)
 			{
 				return 1;
 			}
 
-			public override int GetItemsCount (UICollectionView collectionView, int section)
+			public override nint GetItemsCount (UICollectionView collectionView, nint section)
 			{
 				return cv.SelectedContacts.Count + (cv.ShowPrompt ? 1 : 0) + 1;
 			}
@@ -461,9 +461,9 @@ namespace XContactPicker
 			private ContactCell contactPrototypeCell;
 
 			[Export("collectionView:layout:sizeForItemAtIndexPath:")]
-			public SizeF GetSizeForItem (UICollectionView collectionView, UICollectionViewLayout layout, NSIndexPath indexPath)
+			public CGSize GetSizeForItem (UICollectionView collectionView, UICollectionViewLayout layout, NSIndexPath indexPath)
 			{
-				float width;
+				nfloat width;
 
 				if (cv.IsPromptCell (indexPath))
 				{
@@ -478,7 +478,7 @@ namespace XContactPicker
 					if (entryPrototypeCell == null) {
 						entryPrototypeCell = new EntryCell ();
 					}
-					width = Math.Max (50, entryPrototypeCell.WidthForText (cv.SearchText));
+					width = (nfloat)Math.Max (50, entryPrototypeCell.WidthForText (cv.SearchText));
 				}
 				else
 				{
@@ -490,7 +490,7 @@ namespace XContactPicker
 					width = contactPrototypeCell.WidthForContact (contact);
 				}
 
-				return new SizeF (Math.Min (cv.MaxContentWidth, width), cv.CellHeight);
+				return new CGSize ((nfloat)Math.Min (cv.MaxContentWidth, width), cv.CellHeight);
 			}
 		}
 

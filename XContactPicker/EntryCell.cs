@@ -1,7 +1,7 @@
-﻿using System;
-using MonoTouch.UIKit;
-using System.Drawing;
-using MonoTouch.Foundation;
+using System;
+using UIKit;
+using CoreGraphics;
+using Foundation;
 
 namespace XContactPicker
 {
@@ -31,7 +31,7 @@ namespace XContactPicker
 			Setup ();
 		}
 
-		public EntryCell (RectangleF frame)
+		public EntryCell (CGRect frame)
 			: base (frame)
 		{
 			Setup ();
@@ -59,9 +59,9 @@ namespace XContactPicker
 			TextChanged (Text);
 		}
 
-		public float WidthForText (string text)
+		public nfloat WidthForText (string text)
 		{
-			var rect = new NSString (text).GetBoundingRect (new SizeF (float.MaxValue, float.MaxValue), 
+			var rect = new NSString (text).GetBoundingRect (new CGSize (float.MaxValue, float.MaxValue), 
 												NSStringDrawingOptions.UsesLineFragmentOrigin,
 												new UIStringAttributes { Font = textField.Font }, 
 												null);

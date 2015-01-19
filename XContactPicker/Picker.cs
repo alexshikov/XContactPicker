@@ -1,6 +1,6 @@
-﻿using System;
-using MonoTouch.UIKit;
-using System.Drawing;
+using System;
+using UIKit;
+using CoreGraphics;
 
 namespace XContactPicker
 {
@@ -8,7 +8,7 @@ namespace XContactPicker
 	{
 		private ContactsCollectionView entryView;
 
-		public Picker (RectangleF frame)
+		public Picker (CGRect frame)
 			: base (frame)
 		{
 			Setup ();

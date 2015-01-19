@@ -1,13 +1,13 @@
-﻿using System;
-using MonoTouch.UIKit;
-using System.Drawing;
-using MonoTouch.Foundation;
+using System;
+using UIKit;
+using CoreGraphics;
+using Foundation;
 
 namespace XContactPicker
 {
 	public class CollectionFlowLayout: UICollectionViewFlowLayout
 	{
-		public override UICollectionViewLayoutAttributes[] LayoutAttributesForElementsInRect (RectangleF rect)
+		public override UICollectionViewLayoutAttributes[] LayoutAttributesForElementsInRect (CGRect rect)
 		{
 			var attributes = base.LayoutAttributesForElementsInRect(rect);
 
@@ -25,7 +25,7 @@ namespace XContactPicker
 
 		public override UICollectionViewLayoutAttributes LayoutAttributesForItem (NSIndexPath indexPath)
 		{
-			RectangleF frame;
+			CGRect frame;
 
 			var currentItemAttributes = base.LayoutAttributesForItem (indexPath);
 			var sectionInset = ((UICollectionViewFlowLayout)CollectionView.CollectionViewLayout).SectionInset;
@@ -47,7 +47,7 @@ namespace XContactPicker
 			var previousFrame = LayoutAttributesForItem(previousIndexPath).Frame;
 
 			var currentFrame = currentItemAttributes.Frame;
-			var stretchedCurrentFrame = new RectangleF (0, currentFrame.Y, CollectionView.Frame.Width, currentFrame.Height);
+			var stretchedCurrentFrame = new CGRect (0, currentFrame.Y, CollectionView.Frame.Width, currentFrame.Height);
 
 			if (!previousFrame.IntersectsWith(stretchedCurrentFrame))
 			{
@@ -60,7 +60,7 @@ namespace XContactPicker
 				if (indexPath.Row == total - 1)
 				{
 					var newWidth = CollectionView.Frame.Width - sectionInset.Left - sectionInset.Right;
-					frame.Width = Math.Max(Math.Max(50, newWidth), frame.Width);
+					frame.Width = (nfloat)Math.Max(Math.Max(50, newWidth), frame.Width);
 				}
 				currentItemAttributes.Frame = frame;
 				return currentItemAttributes;
@@ -71,13 +71,13 @@ namespace XContactPicker
 			if (indexPath.Row == total - 1)
 			{
 				var newWidth = CollectionView.Frame.Width - previousFrame.Right - sectionInset.Right;
-				frame.Width = Math.Max(Math.Max(50, newWidth), frame.Width);
+				frame.Width = (nfloat)Math.Max(Math.Max(50, newWidth), frame.Width);
 			}
 			currentItemAttributes.Frame = frame;
 			return currentItemAttributes;
 		}
 
-		public override bool ShouldInvalidateLayoutForBoundsChange (RectangleF newBounds)
+		public override bool ShouldInvalidateLayoutForBoundsChange (CGRect newBounds)
 		{
 			return true;
 		}
