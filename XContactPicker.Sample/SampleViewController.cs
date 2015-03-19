@@ -1,8 +1,8 @@
 ﻿using System;
-using MonoTouch.UIKit;
-using System.Drawing;
+using UIKit;
+using CoreGraphics;
 using System.Collections.Generic;
-using MonoTouch.Foundation;
+using Foundation;
 using System.Linq;
 
 namespace XContactPicker.Sample
@@ -24,7 +24,7 @@ namespace XContactPicker.Sample
 				new Contact ("Cercei", "cercei@lannister.com"),
 			};
 
-			header = new ContactsCollectionView (new RectangleF (0, 20, 320, 30), 30);
+			header = new ContactsCollectionView (new CGRect (0, 20, 320, 30), 30);
 			header.BackgroundColor = UIColor.FromRGB (245, 245, 245);
 			header.ContentSizeChanged += UpdateSize;
 			header.ContactRemoved += (c) => {
@@ -55,10 +55,10 @@ namespace XContactPicker.Sample
 			UpdateSize (header.Frame.Size);
 		}
 
-		private void UpdateSize (SizeF size)
+		private void UpdateSize (CGSize size)
 		{
 			var frame = header.Frame;
-			frame.Height = Math.Min (64, size.Height);
+			frame.Height = (nfloat)Math.Min (64, size.Height);
 			header.Frame = frame;
 
 			var inset = new UIEdgeInsets (frame.Bottom, 0, 0, 0);
@@ -93,7 +93,7 @@ namespace XContactPicker.Sample
 				return cell;
 			}
 
-			public override int RowsInSection (UITableView tableview, int section)
+			public override nint RowsInSection (UITableView tableview, nint section)
 			{
 				return contacts.Count;
 			}
