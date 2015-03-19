@@ -22,6 +22,7 @@ namespace XContactPicker
 
 		public string SearchText { get; set; }
 		public string PromptText { get; set; }
+		public string EntryPlaceholderText { get; set; }
 
 		public bool AllowsTextInput { get; set; }
 		public bool ShowPrompt { get; set; }
@@ -104,7 +105,8 @@ namespace XContactPicker
 			layout.SectionInset = new UIEdgeInsets (0, 10, 0, 10);
 
 			PromptText = "To:";
-			SearchText = " ";
+			SearchText = string.Empty;
+			EntryPlaceholderText = "Type name";
 
 			AllowsSelection = true;
 			AllowsMultipleSelection = false;
@@ -162,7 +164,7 @@ namespace XContactPicker
 			}
 			else
 			{
-				SearchText = " ";
+				SearchText = string.Empty;
 			}
 
 			if (!SelectedContacts.Contains (contact))
@@ -408,7 +410,7 @@ namespace XContactPicker
 					var id = new NSString (typeof(EntryCell).Name);
 					var cell = (EntryCell)collectionView.DequeueReusableCell (id, indexPath);
 
-					cell.Text = cv.SearchText;
+					cell.SetPlaceholder(cv.EntryPlaceholderText);
 					cell.IsEnabled = cv.AllowsTextInput;
 
 					cell.TextChanged += cv.EntryCellTextChanged;

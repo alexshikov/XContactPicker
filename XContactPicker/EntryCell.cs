@@ -6,25 +6,17 @@ using Foundation;
 namespace XContactPicker
 {
 	public class EntryCell: UICollectionViewCell
-	{
+	{		
 		public event Action<string> TextChanged = delegate {};
 		public event Action BackspaceDetected = delegate {};
-
-		public string Text 
-		{ 
-			get { return textField.Text; }
-			set 
-			{ 
-				if (textField != null) {
-					textField.Text = value; 
-				}
-			}
-		}
+				 
+		private const string WhiteSpace = " ";
 
 		public bool IsEnabled { get; set; }
 
 		private UITextField textField;
 		private object notificationToken;
+		private string placeholderText;
 
 		public EntryCell ()
 		{
@@ -55,8 +47,8 @@ namespace XContactPicker
 
 		public void Reset ()
 		{
-			Text = " ";
-			TextChanged (Text);
+			textField.Text = WhiteSpace;
+			TextChanged (textField.Text);
 		}
 
 		public nfloat WidthForText (string text)
@@ -74,15 +66,16 @@ namespace XContactPicker
 
 			textField = new UITextField (Bounds)
 			{
-				Text = " ",
 				AutocorrectionType = UITextAutocorrectionType.No,
-				TranslatesAutoresizingMaskIntoConstraints = false,
+				TranslatesAutoresizingMaskIntoConstraints = false
 			};
+
 			if (labelStyle.Font != null) {
 				textField.Font = labelStyle.Font;
 			}
 
 			textField.ShouldReturn = delegate { return false; };
+			textField.EditingDidBegin += delegate { RemovePlaceholder(); };
 			textField.ShouldChangeCharacters = ShouldChangeCharacters;
 
 #if DEBUG_BORDERS
@@ -108,7 +101,26 @@ namespace XContactPicker
 		{
 			if (args.Notification.Object == textField) 
 			{
-				TextChanged (Text);
+				TextChanged (textField.Text);
+			}
+		}
+
+		public void SetPlaceholder(string text)
+		{	
+			placeholderText = text;
+			if (textField.Text != text)
+			{
+				textField.Text = text;
+				textField.TextColor = UIColor.LightGray;
+			}
+		}
+
+		private void RemovePlaceholder()
+		{
+			if (textField.Text == placeholderText)
+			{
+				textField.Text = WhiteSpace;
+				textField.TextColor = UIColor.Black;
 			}
 		}
 
