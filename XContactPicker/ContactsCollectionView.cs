@@ -184,6 +184,8 @@ namespace XContactPicker
 
 					ContactAdded (contact);
 
+					ScrollToEntryAnimated (true, null);
+
 				});
 
 			}
